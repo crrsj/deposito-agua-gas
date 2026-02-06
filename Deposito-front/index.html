@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aracaju Gas - Gestão Total</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        .modal-hidden { display: none !important; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+
+    <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-600 p-2 rounded-lg text-white font-bold">AG</div>
+                <h1 class="text-xl font-bold">Aracaju <span class="text-blue-600">Gás</span></h1>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800">
+                <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-extrabold">Painel de Clientes</h2>
+            <button onclick="toggleModal('modalCliente')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                + Novo Cliente
+            </button>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                    <tr>
+                        <th class="px-6 py-4 text-xs font-bold uppercase">ID</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase">Cliente</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase">Endereço Completo</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase text-center">Cidade / Estado</th>
+                        <th class="px-6 py-4 text-xs font-bold uppercase text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaClientesBody" class="divide-y divide-gray-100 dark:divide-gray-700">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="secaoProdutos" class="hidden mt-8 p-6 bg-white dark:bg-gray-900 rounded-3xl shadow-xl border dark:border-gray-800">
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <h2 class="text-2xl font-black text-gray-800 dark:text-white">
+                Histórico de <span id="nomeClienteSelecionado" class="text-blue-600">...</span>
+            </h2>
+        </div>
+        <div class="text-right">
+            <p class="text-[10px] font-bold uppercase text-gray-400">Total Acumulado</p>
+            <span id="spanTotalTabelaExterno" class="text-3xl font-black text-green-500">R$ 0,00</span>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead class="text-xs text-gray-400 uppercase border-b dark:border-gray-800">
+                <tr>
+                    <th class="px-6 py-3">Tipo</th>
+                    <th class="px-6 py-3">Marca</th>
+                    <th class="px-6 py-3 text-center">Qtd</th>
+                    <th class="px-6 py-3">Subtotal</th>
+                    <th class="px-6 py-3 text-center">Pagametto</th>
+                    <th class="px-6 py-3 text-center">Entrega</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabelaProdutos">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+    </main>
+
+    <div id="modalCliente" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-hidden">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-700">
+            <div class="px-8 py-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-blue-500">Novo Cadastro de Cliente</h3>
+                <button onclick="toggleModal('modalCliente')" class="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <form id="formCliente" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-gray-500">NOME</label>
+                    <input type="text" id="nomeCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500">TELEFONE</label>
+                    <input type="text" id="telefoneCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500">UF (ESTADO)</label>
+                    <select id="ufCliente" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="SE">SE</option><option value="BA">BA</option><option value="SP">SP</option><option value="RJ">RJ</option>
+                        </select>
+                </div>
+                <div class="md:col-span-2 grid grid-cols-3 gap-4">
+                    <div class="col-span-2">
+                        <label class="text-xs font-bold text-gray-500">LOGRADOURO (RUA)</label>
+                        <input type="text" id="logradouroCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500">NÚMERO</label>
+                        <input type="text" id="numeroCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500">BAIRRO</label>
+                    <input type="text" id="bairroCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500">CIDADE</label>
+                    <input type="text" id="cidadeCliente" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+                </div>
+                <div class="md:col-span-2 flex justify-end gap-3 mt-4">
+                    <button type="button" onclick="toggleModal('modalCliente')" class="px-6 py-2 text-gray-400">Cancelar</button>
+                    <button type="submit" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalProduto" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-hidden">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl border border-gray-700">
+            <div class="p-8">
+                <h3 class="text-2xl font-bold mb-6 text-green-500">Nova Venda</h3>
+                <form id="formProduto" onsubmit="cadastrarProduto(event)" class="space-y-4">
+                    <input type="hidden" id="p_clienteId">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">TIPO</label>
+                            <select id="p_tipo" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 outline-none">
+                                <option value="AGUA">AGUA</option>
+                                <option value="GAS">GAS</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">MARCA</label>
+                            <select id="p_marca" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 outline-none">
+                                <option value="NACIONALGAS">NACIONALGAS</option>
+                                <option value="ULTRAGAS">ULTRAGAS</option>
+                                <option value="LIQUIGAS">LIQUIGAS</option>
+                                <option value="INDAIA">INDAIA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">QUANTIDADE</label>
+                            <input type="number" id="p_quantidade" min="1" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">VALOR UNITÁRIO (R$)</label>
+                            <input type="number" id="p_valorUnitario" step="0.01" required class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">STATUS PAGAMENTO</label>
+                            <select id="p_pagamento" class="w-full p-3 rounded-xl border-orange-500/50 bg-orange-500/5 text-orange-500 outline-none">
+                                <option value="PENDENTE">PENDENTE</option>
+                                <option value="PAGO">PAGO</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-500">STATUS ENTREGA</label>
+                            <select id="p_entrega" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 outline-none">
+                                <option value="PENDENTE">PENDENTE</option>
+                                <option value="ENTREGUE">ENTREGUE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pt-4 space-y-2">
+                        <button type="submit" class="w-full py-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 shadow-lg shadow-green-600/20">Finalizar Compra</button>
+                        <button type="button" onclick="toggleModal('modalProduto')" class="w-full py-2 text-gray-500 font-medium">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEdicao" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-hidden">
+    <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-700">
+        <div class="px-8 py-6 border-b border-gray-700 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-amber-500">Editar Informações do Cliente</h3>
+            <button onclick="fecharModalEdicao()" class="text-gray-400 hover:text-white">✕</button>
+        </div>
+        <form id="formEdicao" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="hidden" id="edit_id">
+            
+            <div class="md:col-span-2">
+                <label class="text-xs font-bold text-gray-500">NOME</label>
+                <input type="text" id="edit_nome" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700 outline-none">
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500">TELEFONE</label>
+                <input type="text" id="edit_telefone" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-500">LOGRADOURO</label>
+                <input type="text" id="edit_logradouro" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+
+              <div>
+                <label class="text-xs font-bold text-gray-500">NUMERO</label>
+                <input type="text" id="edit_numero" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+
+              <div>
+                <label class="text-xs font-bold text-gray-500">BAIRRO</label>
+                <input type="text" id="edit_bairro" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+
+              <div>
+                <label class="text-xs font-bold text-gray-500">CIDADE</label>
+                <input type="text" id="edit_cidade" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500">UF</label>
+                <input type="text" id="edit_uf" class="w-full p-3 rounded-xl border dark:bg-gray-900 dark:border-gray-700">
+            </div>
+
+            <div class="md:col-span-2 flex justify-end gap-3 mt-4">
+                <button type="button" onclick="fecharModalEdicao()" class="px-6 py-2 text-gray-500">Cancelar</button>
+                <button type="submit" class="px-8 py-3 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-all">
+                    Atualizar Cliente
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script>
+        // Lógica de Modais
+        function toggleModal(modalId, clienteId = null) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('modal-hidden');
+            
+            // Se abrir o modal de produto, injeta o ID do cliente no campo oculto
+            if(clienteId && modalId === 'modalProduto') {
+                document.getElementById('p_clienteId').value = clienteId;
+            }
+        }
+
+        // Lógica de Tema
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Fechar ao clicar fora
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('bg-black/70')) {
+                e.target.classList.add('modal-hidden');
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

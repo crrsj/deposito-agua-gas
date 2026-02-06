@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Base de Dados PostgreSQL
+  db-acquagas:
+    image: postgres:16-alpine
+    container_name: db-acquagas
+    restart: always
+    environment:
+      POSTGRES_DB: acquagas_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Spring Boot (Java 21)
+  api-acquagas:
+    build: .
+    container_name: api-acquagas
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-acquagas:5432/acquagas_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      db-acquagas:
+        condition: service_healthy
+
+  # Frontend (Nginx)
+  front-acquagas:
+    build: ./Deposito-front
+    container_name: front-acquagas
+    ports:
+      - "80:80"
+    depends_on:
+      - api-acquagas
