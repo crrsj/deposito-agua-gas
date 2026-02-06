@@ -52,3 +52,5 @@ docker-compose up --build
 ![ag7](https://github.com/user-attachments/assets/b3b0bcc2-238c-422e-a4a2-8be8680b7e40)
 
 ![ag8](https://github.com/user-attachments/assets/a39c8561-92c6-49a4-bac7-6a11874a2b01)
+
+![ag9](https://github.com/user-attachments/assets/a20f00d6-d30c-4b3b-8cf9-3ca95796afcf)
