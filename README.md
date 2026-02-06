@@ -1,6 +1,6 @@
 Aqui está um modelo de README.md profissional, focado no estado atual do AcquaGas Pro, estruturado para refletir que o projeto está em desenvolvimento ativo.
 
-💧 AcquaGas Pro - Gestão Total
+💧 Aracaju Gás - Gestão Total
 O AcquaGas Pro é um sistema de gestão para depósitos de água e gás, focado no controle de clientes, histórico de vendas e monitoramento financeiro em tempo real. O projeto utiliza uma arquitetura moderna e containerizada para facilitar a escalabilidade e o desenvolvimento.
 
 🚧 Status do Projeto
